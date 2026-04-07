@@ -1,0 +1,4 @@
+import mongoose, { Schema, Document } from 'mongoose';
+export interface IAnnouncement extends Document { name: string; message: string; showtousers: number; showtostaff: number; showname: number; dateadded: Date; userid: mongoose.Types.ObjectId; dismissed_by: mongoose.Types.ObjectId[]; }
+const AnnouncementSchema = new Schema<IAnnouncement>({ name: { type: String, required: true }, message: { type: String }, showtousers: { type: Number, default: 0 }, showtostaff: { type: Number, default: 0 }, showname: { type: Number, default: 0 }, dateadded: { type: Date, default: Date.now }, userid: { type: Schema.Types.ObjectId, ref: 'Staff' }, dismissed_by: [{ type: Schema.Types.ObjectId }] }, { timestamps: true });
+export default mongoose.models.Announcement || mongoose.model<IAnnouncement>('Announcement', AnnouncementSchema);

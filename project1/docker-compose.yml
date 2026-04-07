@@ -1,0 +1,110 @@
+version: "3.9"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ai_saas_app
+    volumes:
+      - ./:/var/www/html
+    depends_on:
+      - mysql
+      - redis
+    environment:
+      - APP_ENV=local
+      - APP_DEBUG=true
+    networks:
+      - ai_saas
+
+  web:
+    image: nginx:1.25-alpine
+    container_name: ai_saas_nginx
+    ports:
+      - "8080:80"
+    volumes:
+      - ./:/var/www/html
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - app
+    networks:
+      - ai_saas
+
+  mysql:
+    image: mysql:8.0
+    container_name: ai_saas_mysql
+    environment:
+      MYSQL_DATABASE: ai_saas
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - ai_saas
+
+  redis:
+    image: redis:7-alpine
+    container_name: ai_saas_redis
+    ports:
+      - "6379:6379"
+    networks:
+      - ai_saas
+
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ai_saas_worker
+    command: php artisan queue:work --sleep=3 --tries=3 --timeout=3600
+    volumes:
+      - ./:/var/www/html
+    depends_on:
+      - app
+      - redis
+    networks:
+      - ai_saas
+
+  horizon:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ai_saas_horizon
+    command: php artisan horizon
+    volumes:
+      - ./:/var/www/html
+    depends_on:
+      - app
+      - redis
+    networks:
+      - ai_saas
+
+  scheduler:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ai_saas_scheduler
+    command: php artisan schedule:work
+    volumes:
+      - ./:/var/www/html
+    depends_on:
+      - app
+    networks:
+      - ai_saas
+
+  fastapi:
+    build:
+      context: ./fastapi_service
+      dockerfile: Dockerfile
+    container_name: ai_saas_fastapi
+    ports:
+      - "8001:8001"
+    networks:
+      - ai_saas
+
+volumes:
+  mysql_data:
+
+networks:
+  ai_saas:
+    driver: bridge

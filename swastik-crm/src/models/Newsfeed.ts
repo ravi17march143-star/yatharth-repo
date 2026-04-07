@@ -1,0 +1,4 @@
+import mongoose, { Schema, Document } from 'mongoose';
+export interface INewsfeed extends Document { staffid: mongoose.Types.ObjectId; message: string; dateadded: Date; likes: mongoose.Types.ObjectId[]; comments: Array<{ staffid: mongoose.Types.ObjectId; message: string; dateadded: Date; likes: mongoose.Types.ObjectId[]; }>; }
+const NewsfeedSchema = new Schema<INewsfeed>({ staffid: { type: Schema.Types.ObjectId, ref: 'Staff', required: true }, message: { type: String, required: true }, dateadded: { type: Date, default: Date.now }, likes: [{ type: Schema.Types.ObjectId, ref: 'Staff' }], comments: [{ staffid: { type: Schema.Types.ObjectId, ref: 'Staff' }, message: { type: String }, dateadded: { type: Date, default: Date.now }, likes: [{ type: Schema.Types.ObjectId, ref: 'Staff' }] }] }, { timestamps: true });
+export default mongoose.models.Newsfeed || mongoose.model<INewsfeed>('Newsfeed', NewsfeedSchema);

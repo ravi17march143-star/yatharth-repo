@@ -1,0 +1,362 @@
+You are a senior SaaS architect and full-stack developer.
+
+I am building a multi-tenant AI SaaS platform with:
+- Laravel 11 backend
+- FastAPI Python AI microservice
+- MySQL
+- Redis queues
+- Sanctum authentication
+- Vue or React admin frontend
+- Docker deployment
+- Multi-tenant architecture
+
+Your task is to COMPLETE the entire platform end-to-end in my existing codebase.
+
+Important rules:
+1. First analyze the current project structure and existing files.
+2. Do NOT create duplicate models, migrations, services, or routes if they already exist.
+3. Reuse existing patterns already used in the repository.
+4. Before writing code, create a detailed implementation plan grouped by:
+   - database
+   - backend
+   - AI microservice
+   - queues
+   - publishing integrations
+   - webhooks
+   - frontend
+   - deployment
+5. After the plan, implement step-by-step automatically.
+6. For every file you create or modify:
+   - show file path
+   - explain why
+   - then generate full code
+7. Keep all code production-ready.
+8. Add validation, exception handling, logging, retry logic, and queue support everywhere.
+9. Add tests for important services and APIs.
+10. Never leave TODO comments. Finish complete code.
+
+Project Features To Build
+
+========================================
+1. Multi-Tenant Core
+========================================
+
+Implement:
+- tenants table
+- tenant middleware
+- tenant-scoped queries
+- tenant_id automatically applied to all records
+- user belongs to tenant
+- tenant-based API isolation
+
+Files to create/update:
+- app/Models/Tenant.php
+- app/Http/Middleware/TenantMiddleware.php
+- app/Traits/BelongsToTenant.php
+- app/Providers/AppServiceProvider.php
+- migrations
+
+========================================
+2. API Credential Management
+========================================
+
+Create system for storing per-tenant API credentials for:
+- OpenAI
+- Gemini
+- Anthropic
+- YouTube
+- Blogger
+- Facebook
+- Instagram
+- TikTok
+- Google Search Console
+- Google Analytics
+
+Need:
+- encrypted credential storage
+- CRUD API
+- credential validation
+- provider enum
+- UI-ready response format
+
+Files:
+- app/Models/ApiCredential.php
+- app/Services/Credentials/*
+- app/Http/Controllers/ApiCredentialController.php
+- routes/api.php
+
+========================================
+3. AI Service Layer
+========================================
+
+Create unified AI abstraction.
+
+Need:
+- provider manager
+- OpenAI implementation
+- Gemini implementation
+- Anthropic implementation
+- failover logic
+- usage logging
+- prompt templates
+- tenant-specific provider selection
+
+Files:
+- app/Services/Ai/AiService.php
+- app/Services/Ai/Providers/*
+- app/Models/AiUsageLog.php
+
+FastAPI service:
+- /generate/text
+- /generate/image
+- /generate/video
+- /generate/blog
+- /seo/analyze
+- /social/caption
+
+Need request validation and standardized JSON responses.
+
+========================================
+4. Blog Generation System
+========================================
+
+Need:
+- blog_posts table
+- AI-generated title/content/meta description/tags
+- draft/published statuses
+- scheduling
+- publishing to Blogger and WordPress
+- SEO metadata
+- regenerate content option
+
+Files:
+- BlogPost model
+- BlogService
+- BlogController
+- BloggerPublisher
+- WordPressPublisher
+- queue jobs
+
+========================================
+5. SEO Module
+========================================
+
+Need:
+- keyword research
+- SEO score
+- title analysis
+- meta description analysis
+- keyword density
+- competitor analysis
+- Google Search Console integration
+
+Need:
+- seo_reports table
+- queued analysis jobs
+- dashboard stats
+
+========================================
+6. Social Media Module
+========================================
+
+Need:
+- generate social captions using AI
+- platform-specific output:
+  - Facebook
+  - Instagram
+  - LinkedIn
+  - X/Twitter
+  - TikTok
+- schedule posts
+- publish posts
+- media upload support
+- hashtag suggestions
+
+Need tables:
+- social_posts
+- social_post_schedules
+
+========================================
+7. Image + Video Generation Module
+========================================
+
+Need:
+- media_contents table
+- generate image/video via FastAPI
+- store generated files
+- thumbnails
+- publish to YouTube
+- publish to Blogger
+- publish to Facebook/Instagram
+
+Need:
+- MediaService
+- MediaController
+- YouTubePublisher
+- BloggerPublisher
+- SocialPublisher
+- queued upload jobs
+- retry support
+
+========================================
+8. Webhook + Real-Time System
+========================================
+
+Implement:
+- webhook_logs table
+- webhook retry system
+- outgoing webhook service
+- incoming webhook handlers
+
+Need support for:
+- Stripe
+- TikTok
+- Facebook
+- Google
+- internal automation events
+
+Need:
+- signed webhooks
+- retry attempts
+- failed queue storage
+- webhook dashboard
+
+Also add:
+- Laravel events + broadcasting
+- websocket updates
+- dashboard live refresh
+
+Use:
+- Laravel Echo
+- Pusher or Soketi
+
+========================================
+9. Queue + Retry Architecture
+========================================
+
+Implement:
+- Redis queues
+- separate queue names:
+  - ai
+  - media
+  - publish
+  - webhook
+  - analytics
+- failed job handling
+- retry policy
+- exponential backoff
+- queue monitoring
+- Horizon integration
+
+Need:
+- queue configuration
+- supervisor config
+- Docker queue workers
+
+========================================
+10. Dashboard Analytics
+========================================
+
+Need:
+- dashboard endpoints returning:
+  - generated blogs count
+  - published posts count
+  - SEO scores
+  - social engagement
+  - video uploads
+  - failed jobs
+  - webhook failures
+- chart-ready JSON
+- per-tenant filtering
+
+========================================
+11. Frontend Admin Panel
+========================================
+
+Generate complete frontend pages/components for:
+- Dashboard
+- API Credentials
+- Blog Generator
+- SEO Reports
+- Social Posts
+- Media Generator
+- Queue Monitor
+- Webhook Logs
+- Settings
+
+Requirements:
+- Use existing frontend framework already in repository.
+- If no frontend exists, generate React + Tailwind admin panel.
+- Use reusable components.
+- Add loading states, errors, pagination, filters, modals, and charts.
+
+========================================
+12. Docker + Deployment
+========================================
+
+Create:
+- docker-compose.yml
+- Dockerfiles for Laravel + FastAPI
+- nginx config
+- Redis service
+- MySQL service
+- queue workers
+- scheduler container
+
+Need environment examples:
+- .env.example
+- AI service env
+- OAuth credentials env
+
+========================================
+13. Testing
+========================================
+
+Create:
+- Feature tests
+- Service tests
+- Queue tests
+- Webhook tests
+- API integration tests
+
+Use:
+- PHPUnit for Laravel
+- Pytest for FastAPI
+
+========================================
+14. Coding Rules
+========================================
+
+Follow:
+- SOLID principles
+- Service layer pattern
+- Repository pattern if already used
+- Tenant isolation everywhere
+- Use FormRequest validation
+- Use DTOs if project already uses them
+- Use queues for all slow tasks
+- Use database transactions where needed
+- Use encrypted credentials
+- Add audit logs
+- Add Laravel policies where needed
+- Never expose secrets in API responses
+
+When generating code:
+- Always generate complete files, not snippets.
+- Mention exact file paths before code.
+- If changing existing files, show only required changes with explanation.
+- Keep implementation incremental and organized.
+
+After each major module is completed:
+1. List created files
+2. List commands to run
+3. List migration commands
+4. List required environment variables
+5. List API endpoints added
+6. List how to test it manually
+
+Start by:
+- Scanning the project
+- Creating a full implementation plan
+- Then begin with Multi-Tenant Core module
+- Wait for no further confirmation and continue module by module until entire system is finished.

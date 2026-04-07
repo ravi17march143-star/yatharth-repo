@@ -1,0 +1,26 @@
+# AI / ML models
+*.pt
+*.bin
+*.ckpt
+
+# Huggingface cache
+.cache/
+ai_model/models/
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# Node
+node_modules/
+
+# Env
+.env
+
+# Zip
+*.zip
+
+# OS
+.DS_Store
+Thumbs.db

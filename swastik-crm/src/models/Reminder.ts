@@ -1,0 +1,4 @@
+import mongoose, { Schema, Document } from 'mongoose';
+export interface IReminder extends Document { description: string; date: Date; isnotified: number; rel_id: mongoose.Types.ObjectId; rel_type: string; notify_by_email: number; staff: mongoose.Types.ObjectId; creator: mongoose.Types.ObjectId; }
+const ReminderSchema = new Schema<IReminder>({ description: { type: String, required: true }, date: { type: Date, required: true }, isnotified: { type: Number, default: 0 }, rel_id: { type: Schema.Types.ObjectId }, rel_type: { type: String }, notify_by_email: { type: Number, default: 0 }, staff: { type: Schema.Types.ObjectId, ref: 'Staff' }, creator: { type: Schema.Types.ObjectId, ref: 'Staff' } }, { timestamps: true });
+export default mongoose.models.Reminder || mongoose.model<IReminder>('Reminder', ReminderSchema);
